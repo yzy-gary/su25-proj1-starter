@@ -24,6 +24,42 @@ static void update_head(game_t *game, unsigned int snum);
 /* Task 1 */
 game_t *create_default_game() {
   // TODO: Implement this function.
+  game_t *g = malloc(sizeof(game_t));
+  if(!g) return NULL;
+
+  g->num_rows = 20;
+  g->num_snakes = 1;
+
+  g->board = malloc(g->num_rows * sizeof(char *));
+  if(!g->board) {free(g); return NULL;}
+  for(unsigned int r = 0; r < g-num_rows; r++) {
+  	g->board[r] = malloc(g->num_rows);
+	if(!g->board[r]) {goto fail;}
+	memset(g->board[r], ' ', g->num_rows);
+  }
+
+  g->snakes = malloc(suzeif(snake_t));
+  if(!g->snakes) goto fail;
+
+  snake_t *s = &g->snakes[0];
+  s->head_row=5;
+  s->head_col = 5;
+  s->tail_col = 5;
+  s->tail_row = 5;
+  s->live = true;
+
+  g->board[5][5] = 'W';
+
+fail:
+  if(g) {
+  	if(g->board){
+		for(unsigned int r = 0; r < g->num_rows; r++) free(board[r]);
+		free(g->board);
+
+	}
+	free(g->snakes);
+	free(g);
+  }
   return NULL;
 }
 
