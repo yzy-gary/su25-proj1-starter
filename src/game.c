@@ -23,44 +23,63 @@ static void update_head(game_t *game, unsigned int snum);
 
 /* Task 1 */
 game_t *create_default_game() {
-  // TODO: Implement this function.
+  // TODO: Implement this function
+  //
+  // alocate room for game_t
   game_t *g = malloc(sizeof(game_t));
   if(!g) return NULL;
 
-  g->num_rows = 20;
+  //initialize game settings
+  g->num_rows = 18;
   g->num_snakes = 1;
 
   g->board = malloc(g->num_rows * sizeof(char *));
-  if(!g->board) {free(g); return NULL;}
-  for(unsigned int r = 0; r < g-num_rows; r++) {
-  	g->board[r] = malloc(g->num_rows);
-	if(!g->board[r]) {goto fail;}
-	memset(g->board[r], ' ', g->num_rows);
+  if(!g->board) {
+	  free(g); 
+	  return NULL;
+  }
+  for(unsigned int r = 0; r < g->num_rows; r++) {
+  	g->board[r] = malloc(21 * sizeof(char));
+	if(!g->board[r]) {
+		for(unsigned int i = 0; i < r; i++)
+			free(g->board[i]);
+		free(g->board);
+		free(g);
+		return NULL;
+	}
   }
 
-  g->snakes = malloc(suzeif(snake_t));
-  if(!g->snakes) goto fail;
+  // draw board with "#"
+  strcpy(g->board[0], "####################");
+  for(int i = 1; i < g->num_rows-1; i++) {
+  	strcpy(g->board[0], "#                  #");
+  }
+  strcpy(g->board[g->num_rows-1], "####################");
+  strcpy(g->board[2], "# d>D               #");
+
+  // allocae snakes array
+  g->snakes = malloc(sizeof(snake_t));
+  if(!g->snakes) {
+  	//clean up on failure
+	for(int i = 0; i < g->num_rows; i++) {
+		free(g->board[i]);
+	}
+	free(g->board);
+	free(g);
+	return NULL;
+  
+  }
 
   snake_t *s = &g->snakes[0];
-  s->head_row=5;
-  s->head_col = 5;
-  s->tail_col = 5;
-  s->tail_row = 5;
+  s->head_row=2;
+  s->head_col = 2;
+  s->tail_col = 2;
+  s->tail_row = 4;
+
   s->live = true;
 
-  g->board[5][5] = 'W';
+  return g;
 
-fail:
-  if(g) {
-  	if(g->board){
-		for(unsigned int r = 0; r < g->num_rows; r++) free(board[r]);
-		free(g->board);
-
-	}
-	free(g->snakes);
-	free(g);
-  }
-  return NULL;
 }
 
 /* Task 2 */
